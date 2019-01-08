@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019. Ivan Vakhrushev. All rights reserved.
+ * https://github.com/mfvanek
+ */
+
 package com.mfvanek.perfect.blog.routes;
 
 import com.mfvanek.perfect.blog.controllers.BlogController;
@@ -9,6 +14,7 @@ import com.mfvanek.perfect.blog.utils.TagUtils;
 import com.mfvanek.perfect.blog.utils.Validator;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import spark.Request;
 import spark.Response;
@@ -59,7 +65,7 @@ public final class RoutesFactory {
 
                 if (sessionId == null) {
                     // no session to end
-                    response.redirect("/login");
+                    redirectToLogin(response);
                 } else {
                     // deletes from session table
                     context.getSessionDao().endSession(sessionId);
@@ -71,7 +77,7 @@ public final class RoutesFactory {
                         response.raw().addCookie(c);
                     }
 
-                    response.redirect("/login");
+                    redirectToLogin(response);
                 }
             }
         };
@@ -101,23 +107,27 @@ public final class RoutesFactory {
         return new FreemarkerBasedRoute("entry_template.ftl", configuration) {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) {
-                final String username = context.getSessionDao().findUserNameBySessionId(SessionCookieUtils.getSessionCookie(request));
-                if (username != null) {
-                    String permalink = request.queryParams("permalink");
-                    BlogPost post = context.getBlogPostDao().findByPermalink(permalink);
-                    //  if post not found, redirect to post not found error
-                    if (post == null) {
-                        response.redirect("/post_not_found");
+                final String sessionId = SessionCookieUtils.getSessionCookie(request);
+                if (StringUtils.isNotBlank(sessionId)) {
+                    final String username = context.getSessionDao().findUserNameBySessionId(sessionId);
+                    if (username != null) {
+                        final String permalink = request.queryParams("permalink");
+                        BlogPost post = context.getBlogPostDao().findByPermalink(permalink);
+                        //  if post not found, redirect to post not found error
+                        if (post == null) {
+                            response.redirect("/post_not_found");
+                        } else {
+                            String commentOrdinalStr = request.queryParams("comment_ordinal");
+                            // look up the post in question
+                            final int ordinal = Integer.parseInt(commentOrdinalStr);
+                            context.getBlogPostDao().likePost(permalink, ordinal);
+                            response.redirect("/post/" + permalink);
+                        }
                     } else {
-                        String commentOrdinalStr = request.queryParams("comment_ordinal");
-                        // look up the post in question
-                        final int ordinal = Integer.parseInt(commentOrdinalStr);
-
-                        context.getBlogPostDao().likePost(permalink, ordinal);
-                        response.redirect("/post/" + permalink);
+                        redirectToLogin(response);
                     }
                 } else {
-                    response.redirect("/login");
+                    redirectToLogin(response);
                 }
             }
         };
@@ -277,7 +287,7 @@ public final class RoutesFactory {
                 String username = context.getSessionDao().findUserNameBySessionId(SessionCookieUtils.getSessionCookie(request));
 
                 if (username == null) {
-                    response.redirect("/login");    // only logged in users can post to blog
+                    redirectToLogin(response);    // only logged in users can post to blog
                 } else if (title.equals("") || post.equals("")) {
                     // redisplay page with errors
                     Map<String, String> root = new HashMap<>();
@@ -318,7 +328,7 @@ public final class RoutesFactory {
 
                 if (username == null) {
                     // looks like a bad request. user is not logged in
-                    response.redirect("/login");
+                    redirectToLogin(response);
                 } else {
                     SimpleHash root = new SimpleHash();
                     root.put("username", username);
@@ -435,16 +445,25 @@ public final class RoutesFactory {
         return new FreemarkerBasedRoute("blog_template.ftl", configuration) {
             @Override
             public void doHandle(Request request, Response response, Writer writer) {
-                final String username = context.getSessionDao().findUserNameBySessionId(SessionCookieUtils.getSessionCookie(request));
+                // Get latest 10 blog posts
                 final List<BlogPost> posts = context.getBlogPostDao().findByDateDescending(10);
                 SimpleHash root = new SimpleHash();
                 root.put("myposts", posts);
-                if (username != null) {
-                    root.put("username", username);
+
+                final String sessionId = SessionCookieUtils.getSessionCookie(request);
+                if (StringUtils.isNotBlank(sessionId)) {
+                    final String username = context.getSessionDao().findUserNameBySessionId(sessionId);
+                    if (username != null) {
+                        root.put("username", username);
+                    }
                 }
                 processTemplate(root, writer);
             }
         };
+    }
+
+    private void redirectToLogin(final Response response) {
+        response.redirect("/login");
     }
 
     private static Configuration createFreemarkerConfiguration() {

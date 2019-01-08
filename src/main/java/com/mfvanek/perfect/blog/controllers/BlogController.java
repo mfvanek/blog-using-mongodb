@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019. Ivan Vakhrushev. All rights reserved.
+ * https://github.com/mfvanek
+ */
+
 package com.mfvanek.perfect.blog.controllers;
 
 import com.mfvanek.perfect.blog.dao.Context;
