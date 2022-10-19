@@ -7,7 +7,6 @@ package com.mfvanek.perfect.blog;
 
 import com.mfvanek.perfect.blog.controllers.BlogController;
 
-// http://localhost:8082/login
 class BlogMain {
 
     public static void main(String[] args) {

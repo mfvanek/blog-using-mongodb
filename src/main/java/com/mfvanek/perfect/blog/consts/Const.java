@@ -5,9 +5,10 @@
 
 package com.mfvanek.perfect.blog.consts;
 
-public final class Const {
+import lombok.experimental.UtilityClass;
 
-    private Const() {}
+@UtilityClass
+public final class Const {
 
     public static final String DATABASE_NAME = "blog";
 }
