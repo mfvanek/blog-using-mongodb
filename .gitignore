@@ -1,3 +1,5 @@
 /target
 *.iws
 target
+/blog-final.ipr
+/perfect.blog.iml
