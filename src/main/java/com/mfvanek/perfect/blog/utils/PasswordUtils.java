@@ -5,27 +5,27 @@
 
 package com.mfvanek.perfect.blog.utils;
 
-import sun.misc.BASE64Encoder;
+import lombok.experimental.UtilityClass;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
+@UtilityClass
 public final class PasswordUtils {
-
-    private PasswordUtils() {}
 
     private static String makePasswordHash(final String password, final String salt) {
         try {
             final String saltedAndHashed = password + "," + salt;
             final MessageDigest digest = MessageDigest.getInstance("MD5");
             digest.update(saltedAndHashed.getBytes());
-            final BASE64Encoder encoder = new BASE64Encoder();
+            final Base64.Encoder encoder = Base64.getEncoder();
             final byte[] hashedBytes = (new String(digest.digest(), StandardCharsets.UTF_8)).getBytes();
-            return encoder.encode(hashedBytes) + "," + salt;
+            return encoder.encodeToString(hashedBytes) + "," + salt;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("MD5 is not available", e);
         }
@@ -53,7 +53,7 @@ public final class PasswordUtils {
         final SecureRandom generator = new SecureRandom();
         final byte[] randomBytes = new byte[32];
         generator.nextBytes(randomBytes);
-        final BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(randomBytes);
+        final Base64.Encoder encoder = Base64.getEncoder();
+        return encoder.encodeToString(randomBytes);
     }
 }
