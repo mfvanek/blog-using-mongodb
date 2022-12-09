@@ -1,5 +1,8 @@
 # Simple blog based on MongoDB
 
+[![Java CI](https://github.com/mfvanek/blog-using-mongodb/actions/workflows/tests.yml/badge.svg)](https://github.com/mfvanek/blog-using-mongodb/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/mfvanek/blog-using-mongodb/branch/master/graph/badge.svg?token=R66V4MPEU1)](https://codecov.io/gh/mfvanek/blog-using-mongodb)
+
 ## Technology stack
 - Java 11
 - [Maven](https://maven.apache.org/)
@@ -8,7 +11,6 @@
 - [Logback](https://logback.qos.ch)
 - [Lombok](https://projectlombok.org)
 - [JUnit 5](https://junit.org/junit5/)
-
 
 ## How to run
 Run MongoDB in Docker
