@@ -10,10 +10,12 @@ import com.mfvanek.perfect.blog.dao.Context;
 import com.mfvanek.perfect.blog.entities.BlogPost;
 import com.mfvanek.perfect.blog.entities.User;
 import com.mfvanek.perfect.blog.utils.SessionCookieUtils;
+import com.mfvanek.perfect.blog.utils.SimpleHashHelper;
 import com.mfvanek.perfect.blog.utils.TagUtils;
 import com.mfvanek.perfect.blog.utils.Validator;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
+import freemarker.template.Version;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import spark.Request;
@@ -45,7 +47,7 @@ public final class RoutesFactory {
         return new FreemarkerBasedRoute("error_template.ftl", configuration) {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) {
-                SimpleHash root = new SimpleHash();
+                SimpleHash root = SimpleHashHelper.createHash();
                 root.put("error", "System has encountered an error.");
                 processTemplate(root, writer);
             }
@@ -92,7 +94,7 @@ public final class RoutesFactory {
         return new FreemarkerBasedRoute("post_not_found.ftl", configuration) {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) {
-                SimpleHash root = new SimpleHash();
+                SimpleHash root = SimpleHashHelper.createHash();
                 processTemplate(root, writer);
             }
         };
@@ -144,7 +146,7 @@ public final class RoutesFactory {
             protected void doHandle(Request request, Response response, Writer writer) {
 
                 String username = context.getSessionDao().findUserNameBySessionId(SessionCookieUtils.getSessionCookie(request));
-                SimpleHash root = new SimpleHash();
+                SimpleHash root = SimpleHashHelper.createHash();
 
                 String tag = StringEscapeUtils.escapeHtml4(request.params(":thetag"));
                 final List<BlogPost> posts = context.getBlogPostDao().findByTagDateDescending(tag);
@@ -166,7 +168,7 @@ public final class RoutesFactory {
         return new FreemarkerBasedRoute("login.ftl", configuration) {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) {
-                SimpleHash root = new SimpleHash();
+                SimpleHash root = SimpleHashHelper.createHash();
                 root.put("username", "");
                 root.put("login_error", "");
                 processTemplate(root, writer);
@@ -203,7 +205,7 @@ public final class RoutesFactory {
                         response.redirect("/welcome");
                     }
                 } else {
-                    SimpleHash root = new SimpleHash();
+                    SimpleHash root = SimpleHashHelper.createHash();
                     root.put("username", StringEscapeUtils.escapeHtml4(username));
                     root.put("password", "");
                     root.put("login_error", "Invalid Login");
@@ -234,8 +236,8 @@ public final class RoutesFactory {
                 // check that comment is good
                 else if (name.equals("") || body.equals("")) {
                     // bounce this back to the user for correction
-                    SimpleHash root = new SimpleHash();
-                    SimpleHash comment = new SimpleHash();
+                    SimpleHash root = SimpleHashHelper.createHash();
+                    SimpleHash comment = SimpleHashHelper.createHash();
 
                     comment.put("name", name);
                     comment.put("email", email);
@@ -262,7 +264,7 @@ public final class RoutesFactory {
                     System.out.println("welcome() can't identify the user, redirecting to signup");
                     response.redirect("/signup");
                 } else {
-                    SimpleHash root = new SimpleHash();
+                    SimpleHash root = SimpleHashHelper.createHash();
                     root.put("username", username);
                     processTemplate(root, writer);
                 }
@@ -330,7 +332,7 @@ public final class RoutesFactory {
                     // looks like a bad request. user is not logged in
                     redirectToLogin(response);
                 } else {
-                    SimpleHash root = new SimpleHash();
+                    SimpleHash root = SimpleHashHelper.createHash();
                     root.put("username", username);
                     processTemplate(root, writer);
                 }
@@ -348,7 +350,7 @@ public final class RoutesFactory {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) {
 
-                SimpleHash root = new SimpleHash();
+                SimpleHash root = SimpleHashHelper.createHash();
                 // initialize values for the form.
                 root.put("username", "");
                 root.put("password", "");
@@ -422,12 +424,12 @@ public final class RoutesFactory {
                     response.redirect("/post_not_found");
                 } else {
                     // empty comment to hold new comment in form at bottom of blog entry detail page
-                    SimpleHash newComment = new SimpleHash();
+                    SimpleHash newComment = SimpleHashHelper.createHash();
                     newComment.put("name", "");
                     newComment.put("email", "");
                     newComment.put("body", "");
 
-                    SimpleHash root = new SimpleHash();
+                    SimpleHash root = SimpleHashHelper.createHash();
                     root.put("post", post);
                     root.put("comment", newComment);
                     processTemplate(root, writer);
@@ -447,7 +449,7 @@ public final class RoutesFactory {
             public void doHandle(Request request, Response response, Writer writer) {
                 // Get latest 10 blog posts
                 final List<BlogPost> posts = context.getBlogPostDao().findByDateDescending(10);
-                SimpleHash root = new SimpleHash();
+                SimpleHash root = SimpleHashHelper.createHash();
                 root.put("myposts", posts);
 
                 final String sessionId = SessionCookieUtils.getSessionCookie(request);
@@ -467,7 +469,7 @@ public final class RoutesFactory {
     }
 
     private static Configuration createFreemarkerConfiguration() {
-        Configuration configuration = new Configuration();
+        Configuration configuration = new Configuration(new Version("2.3.0"));
         // TODO
         configuration.setClassForTemplateLoading(BlogController.class, "/freemarker");
         return configuration;

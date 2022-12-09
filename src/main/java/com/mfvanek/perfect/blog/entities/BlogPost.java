@@ -49,7 +49,7 @@ public class BlogPost {
 
     public Map<String, Object> toMap() {
         final ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(this, new TypeReference<Map<String, Object>>() {});
+        return mapper.convertValue(this, new TypeReference<>() {});
     }
 
     public Document toDocument() {
@@ -68,14 +68,12 @@ public class BlogPost {
     }
 
     private static List<String> extractTags(final Document document) {
-        @SuppressWarnings("unchecked")
-        final List<String> tags = document.get("tags", List.class);
+        @SuppressWarnings("unchecked") final List<String> tags = document.get("tags", List.class);
         return tags;
     }
 
     private static List<Comment> extractComments(final Document document) {
-        @SuppressWarnings("unchecked")
-        final List<Document> rawComments = document.get("comments", List.class);
+        @SuppressWarnings("unchecked") final List<Document> rawComments = document.get("comments", List.class);
         if (CollectionUtils.isNotEmpty(rawComments)) {
             return rawComments.stream().map(Comment::new).collect(Collectors.toList());
         }

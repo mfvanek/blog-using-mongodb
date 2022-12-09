@@ -1,10 +1,5 @@
-<!--
-  ~ Copyright (c) 2019. Ivan Vakhrushev. All rights reserved.
-  ~ https://github.com/mfvanek
-  -->
-
 <!doctype HTML>
-<html
+<html>
 <head>
     <title>
         Blog Post
@@ -66,5 +61,3 @@ ${post["body"]}
 </ul>
 </body>
 </html>
-
-

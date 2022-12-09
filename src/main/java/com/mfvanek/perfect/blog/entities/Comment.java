@@ -36,7 +36,7 @@ public class Comment implements Serializable {
 
     public Map<String, Object> toMap() {
         final ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(this, new TypeReference<Map<String, Object>>() {});
+        return mapper.convertValue(this, new TypeReference<>() {});
     }
 
     public Document toDocument() {
