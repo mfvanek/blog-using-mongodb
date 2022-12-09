@@ -1,10 +1,5 @@
-<!--
-  ~ Copyright (c) 2019. Ivan Vakhrushev. All rights reserved.
-  ~ https://github.com/mfvanek
-  -->
-
 <!doctype HTML>
-<html
+<html>
 <head>
 <title>
 Post not found
@@ -12,8 +7,5 @@ Post not found
 </head>
 <body>
 Sorry, post not found
-
 </body>
 </html>
-
-

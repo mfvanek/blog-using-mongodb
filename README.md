@@ -1,7 +1,7 @@
 # Simple blog based on MongoDB
 
 ## Technology stack
-- Java 8
+- Java 11
 - [Maven](https://maven.apache.org/)
 - [Spark Framework](http://sparkjava.com) (with embedded Jetty)
 - [Freemarker](https://freemarker.apache.org)

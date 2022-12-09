@@ -5,11 +5,12 @@
 
 package com.mfvanek.perfect.blog.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Map;
 
+@UtilityClass
 public final class Validator {
-
-    private Validator() {}
 
     // validates that the registration form has been filled out right and username conforms
     public static boolean validateSignup(
@@ -32,7 +33,6 @@ public final class Validator {
             errors.put("password_error", "invalid password.");
             return false;
         }
-
 
         if (!password.equals(verify)) {
             errors.put("verify_error", "password must match");

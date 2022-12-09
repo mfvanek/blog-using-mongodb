@@ -5,11 +5,12 @@
 
 package com.mfvanek.perfect.blog.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.ArrayList;
 
+@UtilityClass
 public final class TagUtils {
-
-    private TagUtils() {}
 
     // tags the tags string and put it into an array
     public static ArrayList<String> extractTags(String tags) {

@@ -5,13 +5,13 @@
 
 package com.mfvanek.perfect.blog.utils;
 
+import lombok.experimental.UtilityClass;
 import spark.Request;
 
 import javax.servlet.http.Cookie;
 
+@UtilityClass
 public final class SessionCookieUtils {
-
-    private SessionCookieUtils() {}
 
     // helper function to get session cookie as string
     public static String getSessionCookie(final Request request) {

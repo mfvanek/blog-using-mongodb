@@ -1,8 +1,3 @@
-<!--
-  ~ Copyright (c) 2019. Ivan Vakhrushev. All rights reserved.
-  ~ https://github.com/mfvanek
-  -->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,4 +44,3 @@
 </#if>
 </body>
 </html>
-
