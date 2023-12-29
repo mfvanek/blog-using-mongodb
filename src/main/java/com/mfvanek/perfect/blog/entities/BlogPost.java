@@ -22,6 +22,7 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,6 @@ public class BlogPost {
     public static String makePermalink(final String title) {
         String permalink = title.replaceAll("\\s", "_"); // whitespace becomes _
         permalink = permalink.replaceAll("\\W", ""); // get rid of non alphanumeric
-        return permalink.toLowerCase();
+        return permalink.toLowerCase(Locale.ROOT);
     }
 }

@@ -7,6 +7,7 @@ package com.mfvanek.perfect.blog.utils;
 
 import lombok.experimental.UtilityClass;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,11 +21,12 @@ public final class PasswordUtils {
 
     private static String makePasswordHash(final String password, final String salt) {
         try {
+            final Charset utf8 = StandardCharsets.UTF_8;
             final String saltedAndHashed = password + "," + salt;
             final MessageDigest digest = MessageDigest.getInstance("MD5");
-            digest.update(saltedAndHashed.getBytes());
+            digest.update(saltedAndHashed.getBytes(utf8));
             final Base64.Encoder encoder = Base64.getEncoder();
-            final byte[] hashedBytes = (new String(digest.digest(), StandardCharsets.UTF_8)).getBytes();
+            final byte[] hashedBytes = new String(digest.digest(), utf8).getBytes(utf8);
             return encoder.encodeToString(hashedBytes) + "," + salt;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("MD5 is not available", e);

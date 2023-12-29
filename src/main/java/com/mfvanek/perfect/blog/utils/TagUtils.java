@@ -8,12 +8,13 @@ package com.mfvanek.perfect.blog.utils;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @UtilityClass
 public final class TagUtils {
 
     // tags the tags string and put it into an array
-    public static ArrayList<String> extractTags(String tags) {
+    public static List<String> extractTags(String tags) {
         tags = tags.replaceAll("\\s", "");
         String[] tagArray = tags.split(",");
 
