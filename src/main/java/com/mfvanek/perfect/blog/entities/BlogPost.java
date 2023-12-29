@@ -19,10 +19,7 @@ import org.bson.Document;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -83,6 +80,6 @@ public class BlogPost {
     public static String makePermalink(final String title) {
         String permalink = title.replaceAll("\\s", "_"); // whitespace becomes _
         permalink = permalink.replaceAll("\\W", ""); // get rid of non alphanumeric
-        return permalink.toLowerCase();
+        return permalink.toLowerCase(Locale.ROOT);
     }
 }
